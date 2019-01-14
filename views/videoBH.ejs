@@ -1,0 +1,251 @@
+<script>
+function togglePlay(){
+    var aud = document.getElementById("audiotest");
+    if (!aud.paused){
+    aud.pause();
+    }else{
+    aud.play();
+    }
+
+};
+</script>
+<style>
+.progress {
+  width: 1px;
+  height: 10px;
+  background: #8cd2f4;
+  transition: width .1s linear;
+}
+h1 {
+  font-weight: 400;
+  text-align: center;
+  text-transform: uppercase;
+}
+.button {
+  background-image: linear-gradient(to right, yellow, brown);
+  border: none;
+  color: black;
+    font-family: Impact, fantasy;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  width: 600px;
+  font-size: 18px;
+  margin: 4px 2px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+}
+.button2:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+@keyframes ticker {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+  }
+  .tcontainer{
+    width: 100%;
+    overflow: hidden;
+  }
+  .ticker-wrap {
+    width: 100%;
+    padding-left: 100%;
+    background-color: #eee;
+  }
+  .ticker-move {
+    display: inline-block;
+    white-space: nowrap;
+    padding-right: 100%;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-name: ticker;
+    animation-duration: 10s;
+  }
+  .ticker-move:hover{
+    animation-play-state: paused;
+  }
+  .ticker-item{
+    display: inline-block;
+    font-family: Impact, fantasy;
+    font-size:18px;
+    padding: 0 1rem;
+  }
+</style>
+<audio id="audiotest" autoplay preload="none" preload src=http://dl.dropbox.com/s/agzovyhxwj2cfut/All%20About%20That%20Bass.mp3"></audio>
+<div id="test"></div>
+<div style="width:600px;height:1000px;">  
+<button class="button button2 togglePlay" onClick="togglePlay()">Play/Pause</button>
+<div style="postion:relative;width:600px;"><div class="progress" id="progress"></div>
+<div class="tcontainer">
+    <div class="ticker-wrap">
+      <div class="ticker-move">
+        <div class="ticker-item"> CURRENTLY PLAYING:</div>
+        <div class="ticker-item" id="sname"></div>
+        <div class="ticker-item"> BY</div>
+        <div class="ticker-item" id="sartist"></div>
+
+      </div>
+    </div>
+  </div></div> 
+<br>
+<div style="float:left;"> 
+<div class="flip-container" id="mycard" ontouchstart="this.classList.toggle('hover');">
+        <div class="flipper">
+                <div class="front">
+                        <img src="bhrlogo.jpg" height="300" width= "400">
+                </div>
+                <div class="back">
+                        <div style="float:left;">
+                        <img src="bhrlogo.jpg" height="150" width= "150">
+                        </div> 
+                        <div style="position:relative;line-height:1.5;">
+                            <p id="bname" style="color:#0867ab;"> YOUR BUSINESS HERE</p>
+                            <p id="bnumber" style="color:#0867ab;"></p>
+                            <p id="bweb" style="color:#0867ab;">YOUR WEBSITE HERE</p>
+                        </div>
+                </div>
+        </div>
+</div> 
+</div>
+<div id="songdis" style="float:right;">
+        <div style="float:left">
+            <iframe id="amz" width="125" height="250" frameborder="0" src="http://ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ac&ref=qf_sp_asin_til&ad_type=product_link&tracking_id=beac07-20&marketplace=amazon&region=US&placement=B00OIK4D9C&asins=B00OIK4D9C&linkId=ee56bec77dad4da72aa52a852fd64b71&show"></iframe>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+var timer;
+var percent=0;
+var aud = document.getElementById("audiotest");
+aud.onended = function() {
+          socket.emit('audend', "SONG ENDED");
+};
+socket.on('audend', function(msg){
+      var str= msg;
+      var res=str.split(",");
+    var aud = document.getElementById("audiotest");
+    aud.src=res[0];
+    $('#sname').append().text(res[1]);
+    $('#sartist').append().text(res[2]);
+    fra.src=res[3];    
+});
+
+socket.on('songstatus', function(msg){
+      $('#test').append().text(msg);
+        var aud = document.getElementById("audiotest");
+        text1 = document.getElementById("sname").innerHTML;
+        text2 = document.getElementById("sartist").innerHTML;
+        
+      var str= aud.src+","+aud.currentTime+","+text1+","+text2;
+      socket.emit('songmid',str);       
+});
+socket.on('songmid', function(msg){
+      var str= msg;
+      var res=str.split(",");
+      var aud = document.getElementById("audiotest");
+      aud.src=res[0];
+      aud.currentTime=res[1];
+          $('#sname').append().text(res[2]);
+    $('#sartist').append().text(res[3]);
+});
+
+</script>
+<style>
+/* entire container, keeps perspective */
+.flip-container {
+	perspective: 1000px;
+}
+	/* flip the pane when hovered */
+	.flip-container:hover .flipper, .flip-container.hover .flipper,.flip-container.flip .flipper {
+		transform: rotateY(180deg);
+	}
+        
+
+.flip-container, .front, .back {
+	width: 320px;
+	height: 480px;
+}
+
+/* flip speed goes here */
+.flipper {
+	transition: 0.6s;
+	transform-style: preserve-3d;
+
+	position: relative;
+}
+
+/* hide back of pane during swap */
+.front, .back {
+	backface-visibility: hidden;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* front pane, placed above back */
+.front {
+	z-index: 2;
+	/* for firefox 31 */
+	transform: rotateY(0deg);
+}
+
+/* back, initially hidden pane */
+.back {
+	transform: rotateY(180deg);
+}
+</style> 
+          
+<script>
+$(
+  function(){
+  var aud = $('audio')[0];
+  $('.play-pause').on('click', function(){
+  if (aud.paused) {
+    socket.emit('audplay', "SONG played");
+    aud.play();
+    $('.play-pause').removeClass('icon-play');
+    $('.play-pause').addClass('icon-stop');
+  }
+  else {
+    aud.pause();
+    $('.play-pause').removeClass('icon-stop');
+    $('.play-pause').addClass('icon-play');
+  }
+  
+});
+  aud.ontimeupdate = function(){
+    $('.progress').css('width', aud.currentTime / aud.duration * 100 + '%')
+  }
+});
+socket.on('chat message', function(msg){
+      var str= msg;
+      var res=str.split(",");
+
+    $('#bname').append().text(res[0]);
+    $('#bnumber').append().text(res[1]);
+    $('#bweb').append().text(res[2]);
+    document.getElementsByClassName('flip-container')[0].classList.add('flip');
+    setTimeout(function(){document.getElementsByClassName('flip-container')[0].classList.remove('flip')}, 5000);
+    ;
+});
+var aud = document.getElementById("songplay");
+var fra = document.getElementById("amz");
+aud.onended = function() {
+          socket.emit('audend', "SONG ENDED");
+};
+socket.on('audend', function(msg){
+      var str= msg;
+      var res=str.split(",");
+    aud.src=res[0];
+    $('#sname').append().text(res[1]);
+    $('#sartist').append().text(res[2]);
+    fra.src=res[3];        
+});
+window.onload = function() {
+  var context = new AudioContext();
+  aud.play();
+}
+</script>

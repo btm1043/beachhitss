@@ -1,0 +1,6 @@
+{
+    "songs":[
+    {"songName":"All About That Bass", "ArtistName":"Meghan Trainor", "amazonlink":"https://ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ac&ref=qf_sp_asin_til&ad_type=product_link&tracking_id=beac07-20&marketplace=amazon&region=US&placement=B00OIK4D9C&asins=B00OIK4D9C&linkId=ee56bec77dad4da72aa52a852fd64b71&show", "dblink":"https://dl.dropbox.com/s/agzovyhxwj2cfut/All%20About%20That%20Bass.mp3"},
+    {"songName":"Can't Stop the Feeling", "ArtistName":"Justin Timberlake", "amazonlink":"https://ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ac&ref=qf_sp_asin_til&ad_type=product_link&tracking_id=beac07-20&marketplace=amazon&region=US&placement=B00OIK4D9C&asins=B00OIK4D9C&linkId=ee56bec77dad4da72aa52a852fd64b71&show", "dblink":"https://dl.dropbox.com/s/3htylb531p3qzv8/Can%27t%20Stop%20the%20Feeling%21%20%28Original%20Song%20from%20DreamWorks%20Animation%27s%20%20TROLLS%20%29.mp3"}
+    ]
+}

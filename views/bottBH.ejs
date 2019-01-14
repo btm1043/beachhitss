@@ -1,0 +1,94 @@
+
+<style>
+/* entire container, keeps perspective */
+.flip-container {
+	perspective: 400px;
+}
+	/* flip the pane when hovered */
+	.flip-container:hover .flipper, .flip-container.hover .flipper {
+		transform: rotateY(180deg);
+	}
+
+.flip-container, .front, .back {
+	width: 400px;
+	height: 480px;
+}
+
+/* flip speed goes here */
+.flipper {
+	transition: 0.6s;
+	transform-style: preserve-3d;
+
+	position: relative;
+}
+
+/* hide back of pane during swap */
+.front, .back {
+	backface-visibility: hidden;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* front pane, placed above back */
+.front {
+	z-index: 2;
+	/* for firefox 31 */
+	transform: rotateY(0deg);
+}
+
+/* back, initially hidden pane */
+.back {
+	transform: rotateY(180deg);
+}
+</style> 
+          
+<script>
+$(
+  function(){
+  var aud = $('audio')[0];
+  $('.play-pause').on('click', function(){
+  if (aud.paused) {
+    socket.emit('audplay', "SONG played");
+    aud.play();
+    $('.play-pause').removeClass('icon-play');
+    $('.play-pause').addClass('icon-stop');
+  }
+  else {
+    aud.pause();
+    $('.play-pause').removeClass('icon-stop');
+    $('.play-pause').addClass('icon-play');
+  }
+  
+});
+  aud.ontimeupdate = function(){
+    $('.progress').css('width', aud.currentTime / aud.duration * 100 + '%')
+  }
+});
+socket.on('chat message', function(msg){
+      var str= msg;
+      var res=str.split(",");
+
+    $('#bname').append().text(res[0]);
+    $('#bnumber').append().text(res[1]);
+    $('#bweb').append().text(res[2]);
+});
+var aud = document.getElementById("songplay");
+var fra = document.getElementById("amz");
+aud.onended = function() {
+          socket.emit('audend', "SONG ENDED");
+};
+socket.on('audend', function(msg){
+      var str= msg;
+      var res=str.split(",");
+    aud.src=res[0];
+    $('#sname').append().text(res[1]);
+    $('#sartist').append().text(res[2]);
+    fra.src=res[3];        
+});
+window.onload = function() {
+  var context = new AudioContext();
+  aud.play();
+}
+</script>
